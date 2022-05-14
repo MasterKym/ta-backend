@@ -1,0 +1,16 @@
+version: "2.2"
+services:
+    db:
+        container_name: sso_proto
+        image: postgres:14.1
+        ports:
+            - "5400:5432"
+        environment:
+            POSTGRES_DB: sso_proto
+            POSTGRES_USER: user11
+            POSTGRES_PASSWORD: user11
+        volumes:
+            - postgres_data:/var/lib/postgres # This needs to be changed for non unix systems
+
+volumes:
+    postgres_data:

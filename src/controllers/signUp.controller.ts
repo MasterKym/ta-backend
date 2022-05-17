@@ -7,7 +7,7 @@ import SALT from '../env/SALT';
 const signUp = async (req:Request, res:Response) => {
 
   const schema = Joi.object({
-    username: Joi.string().min(5).max(50).required(),
+    username: Joi.string().min(5).max(25).required(),
     password: Joi.string().min(8).max(20).required(),
     confirmPassword: Joi.ref("password"),
     role: Joi.string().valid('USER', 'ADMIN', 'SUPER_ADMIN'),

@@ -1,7 +1,12 @@
 # backend
 
-## TODO
-Document how to setup the project
+# Running the project
+
+To run this back end you will need two terminals to run two scripts.
+The first script is `ts:watch`, it starts the typescript compiler in watch mode.
+The second script is `dev` which uses `nodemon` to restart the app when changes are made.
+
+If you followed only the last two steps you would likely get an error in the database connection, that's because it's attempting to connect to a database that's not running. In the `docker-compose.yml` file there is a config for the postgreSQL database the project uses, to run it you need to have `docker` and `docker-compose` installed. On Unix systems you just run `docker-compose up -d`, this might need sudo privileges.
 
 ## Branches
 

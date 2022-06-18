@@ -1,7 +1,7 @@
 version: "2.2"
 services:
     db:
-        container_name: sso_proto
+        container_name: TA_backend_db
         image: postgres:14.1
         ports:
             - "5400:5432"

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
 import jwt from "jsonwebtoken";
-import JWT_SECRET from '../env/JWT_SECRET';
-import prisma from '../prisma/prisma';
+import JWT_SECRET from "../env/JWT_SECRET";
+import prisma from "../prisma/prisma";
 
 /*
 	DEV NOTE:
@@ -39,25 +39,37 @@ const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   // 3. Checking if token is rightly signed
-  const decoded = <{ username: string; rand: string }>(
+  const decoded = <{ username: string; exp: number }>jwt.decode(jwtToken);
+
+  if (!decoded || !decoded.exp || Date.now() >= decoded.exp * 1000) {
+    return res.status(403).json({
+      message: "Token expired",
+    });
+  }
+
+  const verified = <{ username: string; exp: number }>(
     jwt.verify(jwtToken, JWT_SECRET)
   );
 
-  if (!decoded) {
+  if (!verified) {
     return res.status(403).json({
-      message: "Token wrongly signed",
+      message: "Token is not correctly signed",
     });
   }
-  const user = await prisma.user.findUnique({where: {
-    username: decoded.username
-  }})
-  if(!user) return res.status(500).json({message: "Non existant user was signed !!"})
 
-  console.log(user);
-  // adding user email to res.locals
-  res.locals.user = { username: user.username, role: user.role};
+  const user = await prisma.user.findUnique({
+    where: {
+      username: decoded.username,
+    },
+  });
 
-  // If everything went well, go next
+  if (!user)
+    return res.status(500).json({ message: "Non existant user was signed !!" });
+
+  // adding user username to res.locals
+  res.locals.user = { username: decoded.username, role: user.role };
+
+  // If everything went well, go next baby..!
   next();
 };
 

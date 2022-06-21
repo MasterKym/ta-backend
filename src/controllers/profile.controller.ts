@@ -3,17 +3,20 @@ import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 import SALT from '../env/SALT';
 import prisma from '../prisma/prisma';
+import { exclude } from '../utils/excludeField';
 
 export const getProfile = async (
     req: Request,
     res: Response,
     next: NextFunction,
 ) => {
-    const { username, role } = res.locals.user;
+    const { username } = res.locals.user;
 
-    return res
-        .status(200)
-        .send(`Hello ${username}. Your role is: <b>${role}</b>`);
+    const profile = await prisma.user.findUnique({
+        where: { username },
+    });
+    const profileWithoutPassword = exclude(profile!, 'password');
+    return res.status(200).send(profileWithoutPassword);
 };
 
 // Route for updating Profile

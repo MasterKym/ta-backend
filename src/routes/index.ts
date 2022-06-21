@@ -1,6 +1,6 @@
 import { Express } from 'express';
 import logIn from '../controllers/logIn.controller';
-import signOut from '../controllers/logout.controller';
+import signOut from '../controllers/signout.controller';
 import {
     changePassword,
     getProfile,

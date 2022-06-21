@@ -25,7 +25,6 @@ export const updateProfile = async (req: Request, res: Response) => {
         firstName: Joi.string().min(2).max(20).required(),
         lastName: Joi.string().min(2).max(20).required(),
         email: Joi.string().email().required(),
-        password: Joi.string().min(8).max(20).required(),
         dateOfBirth: Joi.date().required(),
         phone: Joi.string().min(10).max(15).required(),
     });
@@ -69,7 +68,7 @@ export const updateProfile = async (req: Request, res: Response) => {
             username: true,
         },
     });
-    res.status(200).send(newProfile);
+    res.status(200).send({ message: 'Profile updated successfully' });
 };
 
 // Router for changing user password
@@ -77,7 +76,7 @@ export const changePassword = async (req: Request, res: Response) => {
     const schema = Joi.object({
         oldPassword: Joi.string().min(8).max(20).required(),
         newPassword: Joi.string().min(8).max(20).required(),
-        confirmPassword: Joi.ref('password'),
+        confirmPassword: Joi.ref('newPassword'),
     });
 
     // Check if the request body is valid
@@ -105,14 +104,15 @@ export const changePassword = async (req: Request, res: Response) => {
     // check if old password supplied by user is correct
     const match = await bcrypt.compare(oldPassword, user!.password);
     if (!match) return res.status(400).json({ message: 'Wrong password' });
-    // hash new password
-    const hashedPassword = await bcrypt.hash(newPassword, SALT);
+
     // check if the new password is the same as the old  one
-    if (hashedPassword === user!.password) {
+    if (oldPassword === newPassword) {
         return res.status(400).json({
             message: "New Password can't be the same as old password",
         });
     }
+    // hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, SALT);
     // update user password
     await prisma.user.update({
         where: { username },

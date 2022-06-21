@@ -4,7 +4,7 @@ services:
         container_name: TA_backend_db
         image: postgres:14.1
         ports:
-            - "5400:5432"
+            - "5432:5432"
         environment:
             POSTGRES_DB: ta_db
             POSTGRES_USER: user11

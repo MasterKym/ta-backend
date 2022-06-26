@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import Joi from 'joi';
 import JWT_SECRET from '../env/JWT_SECRET';
 import jwt from 'jsonwebtoken';
+import { COOKIE_NAME } from '../constants';
 
 const logIn = async (req:Request, res:Response) => {
 
@@ -40,7 +41,7 @@ const logIn = async (req:Request, res:Response) => {
   console.log(token);
 
   // put JWT in cookie
-  res.cookie("login-token", token);
+  res.cookie(COOKIE_NAME, token);
 
   return res.status(200).json({message: "Successful login !"});
 };

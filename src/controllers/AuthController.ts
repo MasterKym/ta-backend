@@ -53,7 +53,6 @@ export const loginUser=async(req :Request,res: Response)=>{
 export const updateUser=async(req :Request,res :Response)=>{
     const id=req.params.id
     const {currentUserId,password} =req.body
-    console.log(currentUserId)
     if(id===currentUserId ){
        
         try {

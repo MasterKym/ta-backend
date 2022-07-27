@@ -12,12 +12,12 @@ const UserSchema = new mongoose.Schema<UserModal>(
     {
         password : {
             type: String,
-            required: true,
-            unique:true
+            required: true
         },
         username : {
             type: String,
-            required: true
+            required: true,
+            unique:true
         },
         firstname: {
             type: String,

@@ -15,6 +15,7 @@ export const signup=async(req:Request,res:Response)=>{
             },
             process.env.JWT_KEY as string,{expiresIn:'1h'}
             )
+            user.password=password
             res.status(200).json({user,token})
         
        
@@ -37,6 +38,8 @@ export const loginUser=async(req :Request,res: Response)=>{
                 },
                 process.env.JWT_KEY as string,{expiresIn:'1h'}
                 )
+                user.password=password
+
                 res.status(200).json({user,token})
            }
         }else{
@@ -44,5 +47,30 @@ export const loginUser=async(req :Request,res: Response)=>{
         }
     } catch (error:any) {
         res.status(500).json({message:error.message})
+    }
+}
+
+export const updateUser=async(req :Request,res :Response)=>{
+    const id=req.params.id
+    const {currentUserId,password} =req.body
+    console.log(currentUserId)
+    if(id===currentUserId ){
+       
+        try {
+            if (password) {
+                const salt=await bcrypt.genSalt(10)
+                req.body.password =await bcrypt.hash(password,salt)
+            }
+            const user =await UserModel.findByIdAndUpdate(id,req.body,{new:true})
+            if (user) {
+                user.password=password
+            }
+            
+            res.status(200).json(user)
+        } catch (error) {
+            res.status(500).json(error)
+        }
+    }else{
+        res.status(403).json("Access denied Son!!")
     }
 }

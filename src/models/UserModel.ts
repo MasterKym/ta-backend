@@ -5,7 +5,8 @@ interface UserModal{
     lastname:String,
     email :String,
     password:String,
-    dateOfBirth:Date
+    dateOfBirth:String,
+    phoneNumber:Number
 }
 const UserSchema = new mongoose.Schema<UserModal>(
     {
@@ -31,9 +32,13 @@ const UserSchema = new mongoose.Schema<UserModal>(
             required: true
         },
         dateOfBirth : {
-            type: Date,
+            type: String,
             required: false
         },
+        phoneNumber:{
+            type:String,
+            required:false
+        }
       
     },
     {timestamps: true}

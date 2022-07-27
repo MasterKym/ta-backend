@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import AuthRoute from "./routes/AuthRoutes";
+import UserRoute from "./routes/UserRoute";
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -25,6 +26,7 @@ app.use('/images',express.static('images'))
 
 // add the listenets for all routes
 app.use('/auth',AuthRoute)
+app.use('/user',UserRoute)
 mongoose.connect(process.env.MONGO_DB as string)
 .then(()=>app.listen(process.env.PORT,()=>console.log("listening at port 5000")))
 .catch((e)=>console.log(e))

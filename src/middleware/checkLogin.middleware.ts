@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
-import Joi from "joi";
-import jwt from "jsonwebtoken";
-import JWT_SECRET from "../env/JWT_SECRET";
-import prisma from "../prisma/prisma";
+import { NextFunction, Request, Response } from 'express';
+import Joi from 'joi';
+import jwt from 'jsonwebtoken';
+import JWT_SECRET from '../env/JWT_SECRET';
+import prisma from '../prisma/prisma';
 
 /*
 	DEV NOTE:
@@ -16,12 +16,12 @@ import prisma from "../prisma/prisma";
 */
 
 const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
-  const jwtToken = req.cookies["login-token"];
+  const jwtToken = req.cookies['login-token'];
 
   // 1. Checking if token exists.
   if (!jwtToken) {
     return res.status(400).json({
-      message: "No login token",
+      message: 'No login token',
     });
   }
 
@@ -34,7 +34,7 @@ const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
 
   if (error) {
     return res.status(400).json({
-      message: "Invalid token",
+      message: 'Invalid token',
     });
   }
 
@@ -43,7 +43,7 @@ const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
 
   if (!decoded || !decoded.exp || Date.now() >= decoded.exp * 1000) {
     return res.status(403).json({
-      message: "Token expired",
+      message: 'Token expired',
     });
   }
 
@@ -53,7 +53,7 @@ const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
 
   if (!verified) {
     return res.status(403).json({
-      message: "Token is not correctly signed",
+      message: 'Token is not correctly signed',
     });
   }
 
@@ -64,7 +64,7 @@ const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
   });
 
   if (!user)
-    return res.status(500).json({ message: "Non existant user was signed !!" });
+    return res.status(500).json({ message: 'Non existant user was signed !!' });
 
   // adding user username to res.locals
   res.locals.user = { username: decoded.username, role: user.role };

@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
-import prisma from "../prisma/prisma";
-import bcrypt from "bcrypt";
-import Joi from "joi";
-import SALT from "../env/SALT";
-import { Role } from "@prisma/client";
+import { Request, Response } from 'express';
+import prisma from '../prisma/prisma';
+import bcrypt from 'bcrypt';
+import Joi from 'joi';
+import SALT from '../env/SALT';
+import { Role } from '@prisma/client';
 
 const signUp = async (req: Request, res: Response) => {
   const schema = Joi.object({
@@ -12,16 +12,16 @@ const signUp = async (req: Request, res: Response) => {
     lastName: Joi.string().min(2).max(20).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(8).max(20).required(),
-    confirmPassword: Joi.ref("password"),
+    confirmPassword: Joi.ref('password'),
     dateOfBirth: Joi.date().required(),
     phone: Joi.string().min(10).max(15).required(),
-    role: Joi.string().valid("USER", "ADMIN", "SUPER_ADMIN"),
+    role: Joi.string().valid('USER', 'ADMIN', 'SUPER_ADMIN'),
   });
 
   const { value, error } = schema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      message: "The values you entered do not meet the requirements.",
+      message: 'The values you entered do not meet the requirements.',
       error: error,
     });
   }
@@ -49,7 +49,7 @@ const signUp = async (req: Request, res: Response) => {
       username,
     },
   });
-  if (user) return res.status(403).json({ message: "User already exists" });
+  if (user) return res.status(403).json({ message: 'User already exists' });
 
   const hashedPassword = await bcrypt.hash(password, SALT);
   const newUser = await prisma.user.create({

@@ -63,7 +63,6 @@ export const updateProfile = async (req: Request, res: Response) => {
     email,
     dateOfBirth,
     phone,
-    username: newUserName
   }: {
     password: string;
     role: Role;
@@ -99,16 +98,7 @@ export const updateProfile = async (req: Request, res: Response) => {
       message: 'Password is incorrect',
     });
   }
-  const usernameTaken = await prisma.user.findUnique({
-    where: {
-      username: newUserName,
-    },
-  });
-  if (usernameTaken) {
-    return res.status(400).json({
-      message: 'Username is taken',
-    });
-  }
+
   await prisma.user
     .update({
       where: {
@@ -118,7 +108,6 @@ export const updateProfile = async (req: Request, res: Response) => {
         firstName,
         lastName,
         email,
-        username: newUserName,	
         password: hashedPassword,
         dateOfBirth: new Date(dateOfBirth),
         phone,

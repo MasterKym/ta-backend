@@ -6,7 +6,7 @@ services:
         ports:
             - "5432:5432"
         environment:
-            POSTGRES_DB: sso_proto
+            POSTGRES_DB: ta_db
             POSTGRES_USER: user11
             POSTGRES_PASSWORD: user11
         volumes:

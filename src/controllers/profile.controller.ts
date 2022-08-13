@@ -3,6 +3,8 @@
 import { NextFunction, Request, Response } from 'express';
 import prisma from "../prisma/prisma";
 import Joi from "joi";
+import SALT from "../env/SALT";
+import bcrypt from "bcrypt";
 
 
 export const getProfile = async (
@@ -63,6 +65,8 @@ export const updateProfile = async (
     phone
   } = req.body
 
+  const hashedPassword = await bcrypt.hash(password, SALT);
+
   const updateUser = await prisma.user.update({
     where: {
       username: username,
@@ -71,11 +75,11 @@ export const updateProfile = async (
       firstName: firstName,
       lastName: lastName,
       email: email,
-      password: password,
-      dateOfBirth: dateOfBirth,
+      password: hashedPassword,
+      dateOfBirth: new Date(dateOfBirth),
       phone: phone
     }
   })
 
-  return res.status(204)
+  return res.status(200).json({"message": "success"})
 }
